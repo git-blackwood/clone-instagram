@@ -1,14 +1,15 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
 import * as bcrypt from "bcrypt";
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-    constructor(private userRepository: UserRepository) {}
+    constructor(private userRepository: UserRepository, private jwtService: JwtService) {}
 
-    async signIn(createUserDto: CreateUserDto): Promise<User> {
+    async signIn(createUserDto: CreateUserDto): Promise<{ accessToken: string }> {
         const { username, password } = createUserDto;
 
         let user = await this.userRepository.findOne({ where: { username } });
@@ -23,12 +24,13 @@ export class AuthService {
             });
 
             await this.userRepository.save(user);
-            return user;
         }
+
+        Logger.log(`${user.username}, ${user.password}`, "AuthService::signIn");
 
         // User Exists -> Sign in
         if (await bcrypt.compare(password, user.password)) {
-            return user;
+            return { accessToken: this.jwtService.sign({ username: user.username })};
         } else {
             throw new UnauthorizedException(`Password is wrong`);
         }

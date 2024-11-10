@@ -14,11 +14,11 @@ class AuthViewModel {
       password: passwordTextController.text,
     ).then((isSignInSuccess) {
       if (isSignInSuccess) {
-      Navigator.of(context).pop();
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BottomNavBar()));
-    } else {
-      debugPrint("SignInViewModel::signIn - Fail to sign in");
-    }
+        Navigator.of(context).pop();
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BottomNavBar()));
+      } else {
+        debugPrint("SignInViewModel::signIn - Fail to sign in");
+      }
     });
   }
 }
