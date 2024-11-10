@@ -1,5 +1,6 @@
 import 'package:clone_instagram_app/view/home_view.dart';
 import 'package:clone_instagram_app/view/add_post_view.dart';
+import 'package:clone_instagram_app/view/my_page_view.dart';
 import 'package:clone_instagram_app/view_model/add_post_view_model.dart';
 import 'package:flutter/material.dart';
 
@@ -22,15 +23,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
         const HomeView(),
         const AddPostView(),
         const HomeView(),
-        const HomeView(),
+        const MyPageView(),
       ][selectedIndex],
       bottomNavigationBar: NavigationBar(
+        selectedIndex: selectedIndex,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         onDestinationSelected: (index) {
           setState(() {
             selectedIndex = index;
-
-            debugPrint("BottomNavBar::build - onDestinationSelected index : $selectedIndex");
 
             if (selectedIndex == 2) {
               _addPostViewModel.pickImage();
