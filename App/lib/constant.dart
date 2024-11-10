@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 // Server
-const String SERVER_HOST = "localhost";
+const String SERVER_HOST = "192.168.219.101";
 const int SERVER_PORT = 3000;
 
 // Color

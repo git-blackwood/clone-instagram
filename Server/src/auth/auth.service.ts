@@ -10,10 +10,19 @@ export class AuthService {
     async signIn(createUserDto: CreateUserDto): Promise<User> {
         const { username, password } = createUserDto;
 
-        const user = this.userRepository.create({
+        let user = await this.userRepository.findOne({ where: { username } });
+        if (user) {
+            // Already Sign up
+            return user;
+        }
+
+        // New user -> Sign up
+        user = this.userRepository.create({
             username,
             password,
         });
+
+        console.log(user);
 
         await this.userRepository.save(user);
         return user;

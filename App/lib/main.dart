@@ -1,5 +1,5 @@
-import 'package:clone_instagram_app/bottom_nav_bar.dart';
 import 'package:clone_instagram_app/constant.dart';
+import 'package:clone_instagram_app/view/signin_view.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,7 +18,7 @@ class MainApp extends StatelessWidget {
           backgroundColor: COLOR_WHITE,
         ),
       ),
-      home: const BottomNavBar(),
+      home: const SigninView(),
     );
   }
 }
