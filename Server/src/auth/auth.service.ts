@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
@@ -11,20 +12,25 @@ export class AuthService {
         const { username, password } = createUserDto;
 
         let user = await this.userRepository.findOne({ where: { username } });
-        if (user) {
-            // Already Sign up
+        if (!user) {
+            // New user -> Sign up
+            const salt = await bcrypt.genSalt();
+            const hashedPassword = await bcrypt.hash(password, salt);
+
+            user = this.userRepository.create({
+                username,
+                password: hashedPassword,
+            });
+
+            await this.userRepository.save(user);
             return user;
         }
 
-        // New user -> Sign up
-        user = this.userRepository.create({
-            username,
-            password,
-        });
-
-        console.log(user);
-
-        await this.userRepository.save(user);
-        return user;
+        // User Exists -> Sign in
+        if (await bcrypt.compare(password, user.password)) {
+            return user;
+        } else {
+            throw new UnauthorizedException(`Password is wrong`);
+        }
     }
 }
